@@ -13,7 +13,8 @@ public class SocialNetworkAdapter extends RecyclerView.Adapter<SocialNetworkAdap
     public SocialNetworkAdapter(String[] data) {
         this.data = data;
     }
-    public SocialNetworkAdapter(){
+
+    public SocialNetworkAdapter() {
 
     }
 
@@ -24,11 +25,17 @@ public class SocialNetworkAdapter extends RecyclerView.Adapter<SocialNetworkAdap
 
     private String[] data;
 
+    OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        return new MyViewHolder(layoutInflater.inflate(R.layout.fragment_social_network_recycler_item, parent, false)) ;
+        return new MyViewHolder(layoutInflater.inflate(R.layout.fragment_social_network_recycler_item, parent, false));
     }
 
     @Override
@@ -48,6 +55,14 @@ public class SocialNetworkAdapter extends RecyclerView.Adapter<SocialNetworkAdap
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = (TextView) itemView;
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(onItemClickListener != null){
+                        onItemClickListener.onItemClick(getLayoutPosition());
+                    }
+                }
+            });
         }
 
         //связываем контент с макетом
