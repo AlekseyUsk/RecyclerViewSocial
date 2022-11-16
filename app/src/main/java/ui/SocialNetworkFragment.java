@@ -1,4 +1,4 @@
-package com.hfad.recyclerviewsocial;
+package ui;
 
 import android.os.Bundle;
 
@@ -12,6 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.hfad.recyclerviewsocial.R;
+
+import repository.LocalRepositoryImpl;
 
 public class SocialNetworkFragment extends Fragment implements OnItemClickListener {
 
@@ -38,7 +42,8 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
 
     void initAdapter() {
         socialNetworkAdapter = new SocialNetworkAdapter();
-        socialNetworkAdapter.setData(getData());                           // 4 - передать в адаптер данные
+        LocalRepositoryImpl localRepositoryImpl = new LocalRepositoryImpl(requireContext().getResources());
+        socialNetworkAdapter.setData(localRepositoryImpl.init()); // 4 - передать в адаптер данные
         socialNetworkAdapter.setOnItemClickListener(this);
     }
 

@@ -1,4 +1,4 @@
-package com.hfad.recyclerviewsocial;
+package ui;
 
 public interface OnItemClickListener {
 

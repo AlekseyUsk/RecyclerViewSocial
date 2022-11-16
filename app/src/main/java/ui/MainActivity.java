@@ -1,8 +1,10 @@
-package com.hfad.recyclerviewsocial;
+package ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.hfad.recyclerviewsocial.R;
 
 public class MainActivity extends AppCompatActivity {
 
