@@ -59,9 +59,12 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
                 data.addCardData(new CardData("Заголовок новой карточки " + data.size(),
                         "Описание новой карточки " + data.size(), R.drawable.nature1, false));
                 socialNetworkAdapter.notifyItemInserted(data.size() - 1);
+                return true;
             }
             case R.id.action_clear: {
-
+                data.clearCardsData();
+                socialNetworkAdapter.notifyDataSetChanged();
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);
