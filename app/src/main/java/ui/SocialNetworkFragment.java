@@ -9,17 +9,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.hfad.recyclerviewsocial.R;
 
+import repository.CardData;
+import repository.CardSource;
 import repository.LocalRepositoryImpl;
 
 public class SocialNetworkFragment extends Fragment implements OnItemClickListener {
 
     SocialNetworkAdapter socialNetworkAdapter;
+    CardSource data;
 
     public static SocialNetworkFragment newInstance() {
         SocialNetworkFragment fragment = new SocialNetworkFragment();
@@ -37,13 +43,34 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
         super.onViewCreated(view, savedInstanceState);
         initAdapter();
         initRecycler(view);
+        setHasOptionsMenu(true); // определил меню
+    }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.cards_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add: {
+                data.addCardData(new CardData("Заголовок новой карточки " + data.size(),
+                        "Описание новой карточки " + data.size(), R.drawable.nature1, false));
+                socialNetworkAdapter.notifyItemInserted(data.size() - 1);
+            }
+            case R.id.action_clear: {
+
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     void initAdapter() {
         socialNetworkAdapter = new SocialNetworkAdapter();
-        LocalRepositoryImpl localRepositoryImpl = new LocalRepositoryImpl(requireContext().getResources());
-        socialNetworkAdapter.setData(localRepositoryImpl.init()); // 4 - передать в адаптер данные
+        data = new LocalRepositoryImpl(requireContext().getResources()).init();
+        socialNetworkAdapter.setData(data); // 4 - передать в адаптер данные
         socialNetworkAdapter.setOnItemClickListener(this);
     }
 

@@ -46,4 +46,24 @@ public class LocalRepositoryImpl implements CardSource {
     public CardData getCardData(int position) {
         return dataSource.get(position);  // определенную карточку по позиции
     }
+
+    @Override
+    public void clearCardsData() {
+        dataSource.clear(); // у нашего списка вызвал команду clear - очистка
+    }
+
+    @Override
+    public void addCardData(CardData cardData) {
+        dataSource.add(cardData);  // добавил
+    }
+
+    @Override
+    public void deleteCardData(int position) {
+        dataSource.remove(position); // удалил по позиции
+    }
+
+    @Override
+    public void updateCardData(int position, CardData newCardData) {
+        dataSource.set(position, newCardData); // обновил карточку по позиции
+    }
 }
