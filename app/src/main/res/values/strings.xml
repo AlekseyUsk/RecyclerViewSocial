@@ -21,5 +21,8 @@
     <string name="add">Добавить</string>
     <string name="clear">очистить</string>
 
+    <string name="update">редактировать</string>
+    <string name="delete">Удалить</string>
+
 
 </resources>

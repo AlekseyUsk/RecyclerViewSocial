@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,6 +54,31 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
     }
 
     @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        requireActivity().getMenuInflater().inflate(R.menu.card_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int menuPosition = socialNetworkAdapter.getMenuPosition();
+        switch (item.getItemId()) {
+            case R.id.action_update: {
+                data.updateCardData(menuPosition, new CardData("Заголовок обновленной карточки ",
+                        "Описание обновленной карточки ", data.getCardData(menuPosition).getPicture(), false));
+                socialNetworkAdapter.notifyItemChanged(menuPosition);
+                return true;
+            }
+            case R.id.action_delete: {
+                data.deleteCardData(menuPosition);
+                socialNetworkAdapter.notifyItemRemoved(menuPosition);
+                return true;
+            }
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add: {
@@ -71,7 +97,7 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
     }
 
     void initAdapter() {
-        socialNetworkAdapter = new SocialNetworkAdapter();
+        socialNetworkAdapter = new SocialNetworkAdapter(this);
         data = new LocalRepositoryImpl(requireContext().getResources()).init();
         socialNetworkAdapter.setData(data); // 4 - передать в адаптер данные
         socialNetworkAdapter.setOnItemClickListener(this);

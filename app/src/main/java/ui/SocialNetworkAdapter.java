@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hfad.recyclerviewsocial.R;
@@ -21,8 +22,19 @@ public class SocialNetworkAdapter extends RecyclerView.Adapter<SocialNetworkAdap
         this.cardSource = cardSource;
     }
 
-    public SocialNetworkAdapter() {
+    Fragment fragment;
 
+    public int getMenuPosition() {
+        return menuPosition;
+    }
+
+    private int menuPosition;
+
+    public SocialNetworkAdapter() {
+    }
+
+    public SocialNetworkAdapter(Fragment fragment) {
+        this.fragment = fragment;
     }
 
     public void setData(CardSource cardSource) {
@@ -57,10 +69,10 @@ public class SocialNetworkAdapter extends RecyclerView.Adapter<SocialNetworkAdap
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewTitle;
-        private TextView textViewDescription;
-        private ImageView imageView;
-        private CheckBox checkBox;
+        private final TextView textViewTitle;
+        private final TextView textViewDescription;
+        private final ImageView imageView;
+        private final CheckBox checkBox;
 
 
         public MyViewHolder(@NonNull View itemView) {
@@ -70,14 +82,24 @@ public class SocialNetworkAdapter extends RecyclerView.Adapter<SocialNetworkAdap
             textViewDescription = (TextView) itemView.findViewById(R.id.description);
             imageView = itemView.findViewById(R.id.imageView);
             checkBox = (CheckBox) itemView.findViewById(R.id.like);
-            /*textView.setOnClickListener(new View.OnClickListener() {
+
+            fragment.registerForContextMenu(itemView); // зарегистрировал на фрагмент контекстное меню на всю карточку
+            // но на кликабельных элементах View работать не будет,нужно выполнить следющие на примере картинки - >
+            imageView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View view) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick(getLayoutPosition());
-                    }
+                public boolean onLongClick(View view) {
+                    menuPosition = getLayoutPosition();
+                   // view.showContextMenu();
+                    return false;
                 }
-            });*/
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    menuPosition = getLayoutPosition();
+                    return false;
+                }
+            });
         }
 
         //связываем контент с макетом
