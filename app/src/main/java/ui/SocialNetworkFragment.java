@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +28,7 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
 
     SocialNetworkAdapter socialNetworkAdapter;
     CardSource data;
+    RecyclerView recyclerView;
 
     public static SocialNetworkFragment newInstance() {
         SocialNetworkFragment fragment = new SocialNetworkFragment();
@@ -85,6 +87,7 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
                 data.addCardData(new CardData("Заголовок новой карточки " + data.size(),
                         "Описание новой карточки " + data.size(), R.drawable.nature1, false));
                 socialNetworkAdapter.notifyItemInserted(data.size() - 1);
+                recyclerView.smoothScrollToPosition(data.size()-1);// анимация плавный скрол
                 return true;
             }
             case R.id.action_clear: {
@@ -104,11 +107,17 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
     }
 
     void initRecycler(View view) {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);  // 1 - нашел список
+        recyclerView = view.findViewById(R.id.recyclerView);  // 1 - нашел список
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         recyclerView.setLayoutManager(layoutManager);                      // 2 - связал с layoutManager
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(socialNetworkAdapter);                     // 3 - связал его со своим адаптером,чтобы кто то говорил ему что отрисовывать
+
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setChangeDuration(3000); // анимация изменения
+        animator.setRemoveDuration(2000); // анимация удаления
+        recyclerView.setItemAnimator(animator);
+
     }
 
     String[] getData() {
