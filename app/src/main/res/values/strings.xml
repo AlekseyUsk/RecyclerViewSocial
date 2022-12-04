@@ -23,6 +23,7 @@
 
     <string name="update">редактировать</string>
     <string name="delete">Удалить</string>
+    <string name="save">Save</string>
 
 
 </resources>

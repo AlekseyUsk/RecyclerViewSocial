@@ -1,4 +1,4 @@
-package ui;
+package ui.main;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,7 +105,7 @@ public class SocialNetworkAdapter extends RecyclerView.Adapter<SocialNetworkAdap
         //связываем контент с макетом
         public void bindContentWithLayout(CardData content) {
             textViewTitle.setText(content.getTitle());
-            textViewDescription.setText(content.getDescription());
+            textViewDescription.setText(content.getDescription() + " "+content.getDate());
             imageView.setImageResource(content.getPicture());
             checkBox.setChecked(content.isLike());
         }

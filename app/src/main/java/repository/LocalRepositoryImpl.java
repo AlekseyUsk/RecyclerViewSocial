@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import com.hfad.recyclerviewsocial.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 //todo 2 - создаем репозиторий лок или онлайн и имплементируем поведение CardSource
@@ -27,7 +28,7 @@ public class LocalRepositoryImpl implements CardSource {
         TypedArray pictures = resources.obtainTypedArray(R.array.pictures);
 
         for (int i = 0; i < titles.length; i++) {
-            dataSource.add(new CardData(titles[i], titles[i], pictures.getResourceId(i, 0), false));
+            dataSource.add(new CardData(titles[i], titles[i], pictures.getResourceId(i, 0), false, Calendar.getInstance().getTime()));
         }
         return this;
     }

@@ -1,4 +1,4 @@
-package ui;
+package ui.main;
 
 import android.os.Bundle;
 
@@ -16,15 +16,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.hfad.recyclerviewsocial.R;
 
+import java.util.Calendar;
+
+import publisher.Observer;
 import repository.CardData;
 import repository.CardSource;
 import repository.LocalRepositoryImpl;
+import ui.MainActivity;
+import ui.editing.CardEditorFragment;
 
 public class SocialNetworkFragment extends Fragment implements OnItemClickListener {
+
+CheckBox checkBox;
 
     SocialNetworkAdapter socialNetworkAdapter;
     CardSource data;
@@ -66,10 +74,17 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
         int menuPosition = socialNetworkAdapter.getMenuPosition();
         switch (item.getItemId()) {
             case R.id.action_update: {
-                data.updateCardData(menuPosition, new CardData("Заголовок обновленной карточки ",
-                        "Описание обновленной карточки ", data.getCardData(menuPosition).getPicture(), false));
-                socialNetworkAdapter.notifyItemChanged(menuPosition);
+                Observer observer = new Observer() {
+                    @Override
+                    public void receiveMessage(CardData cardData) {
+                        ((MainActivity) requireActivity()).getPublisher().unSubscribe(this);
+                        socialNetworkAdapter.notifyItemChanged(menuPosition);
+                    }
+                };
+                ((MainActivity) requireActivity()).getPublisher().subscribe(observer);
+                ((MainActivity) requireActivity()).getSupportFragmentManager().beginTransaction().add(R.id.container, CardEditorFragment.newInstance(data.getCardData(menuPosition))).addToBackStack("").commit();
                 return true;
+
             }
             case R.id.action_delete: {
                 data.deleteCardData(menuPosition);
@@ -85,9 +100,9 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
         switch (item.getItemId()) {
             case R.id.action_add: {
                 data.addCardData(new CardData("Заголовок новой карточки " + data.size(),
-                        "Описание новой карточки " + data.size(), R.drawable.nature1, false));
+                        "Описание новой карточки " + data.size(), R.drawable.nature1, false, Calendar.getInstance().getTime()));
                 socialNetworkAdapter.notifyItemInserted(data.size() - 1);
-                recyclerView.smoothScrollToPosition(data.size()-1);// анимация плавный скрол
+                recyclerView.smoothScrollToPosition(data.size() - 1);// анимация плавный скрол
                 return true;
             }
             case R.id.action_clear: {
