@@ -11,6 +11,12 @@ import ui.main.SocialNetworkFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    Navigation navigation;
+
+    public Navigation getNavigation() {
+        return navigation;
+    }
+
     public Publisher getPublisher() {
         return publisher;
     }
@@ -21,11 +27,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        navigation = new Navigation(getSupportFragmentManager());
         publisher = new Publisher();
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, SocialNetworkFragment.newInstance()).commit();
+            navigation.replaceFragment(SocialNetworkFragment.newInstance(), false);
         }
     }
-
 }

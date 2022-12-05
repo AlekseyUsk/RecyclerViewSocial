@@ -32,7 +32,7 @@ import ui.editing.CardEditorFragment;
 
 public class SocialNetworkFragment extends Fragment implements OnItemClickListener {
 
-CheckBox checkBox;
+    CheckBox checkBox;
 
     SocialNetworkAdapter socialNetworkAdapter;
     CardSource data;
@@ -78,11 +78,12 @@ CheckBox checkBox;
                     @Override
                     public void receiveMessage(CardData cardData) {
                         ((MainActivity) requireActivity()).getPublisher().unSubscribe(this);
+                        //data.updateCardData(menuPosition, cardData);
                         socialNetworkAdapter.notifyItemChanged(menuPosition);
                     }
                 };
                 ((MainActivity) requireActivity()).getPublisher().subscribe(observer);
-                ((MainActivity) requireActivity()).getSupportFragmentManager().beginTransaction().add(R.id.container, CardEditorFragment.newInstance(data.getCardData(menuPosition))).addToBackStack("").commit();
+                ((MainActivity) requireActivity()).getNavigation().addFragment(CardEditorFragment.newInstance(data.getCardData(menuPosition)), true);
                 return true;
 
             }
