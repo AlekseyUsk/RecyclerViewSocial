@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="ui.main.SocialNetworkFragment">
 
-   <androidx.recyclerview.widget.RecyclerView
-       android:id="@+id/recyclerView"
-       app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       tools:listitem="@layout/fragment_social_network_recycler_item"/>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <RadioButton
+                android:id="@+id/sourceArray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="array" />
+
+            <RadioButton
+                android:id="@+id/sourceSharedPreferences"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SharedPreferences" />
+
+            <RadioButton
+                android:id="@+id/sourceFireBase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FireBase" />
+
+        </RadioGroup>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_marginTop="?actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/fragment_social_network_recycler_item" />
 
 </FrameLayout>

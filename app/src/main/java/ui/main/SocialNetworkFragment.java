@@ -1,5 +1,7 @@
 package ui.main;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.hfad.recyclerviewsocial.R;
@@ -55,6 +58,65 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
         initAdapter();
         initRecycler(view);
         setHasOptionsMenu(true); // определил меню
+        initRadioGroup(view);    // SharedPreferences
+    }
+
+    private void initRadioGroup(View view) {
+        view.findViewById(R.id.sourceArray).setOnClickListener(listener);
+        view.findViewById(R.id.sourceSharedPreferences).setOnClickListener(listener);
+        view.findViewById(R.id.sourceFireBase).setOnClickListener(listener);
+
+        switch (getCurrentSource()) {
+            case SOURCE_ARRAY:
+                ((RadioButton) view.findViewById(R.id.sourceArray)).setChecked(true);
+                break;
+            case SOURCE_SHARED_PREFERENCES:
+                ((RadioButton) view.findViewById(R.id.sourceSharedPreferences)).setChecked(true);
+                break;
+            case SOURCE_FIRE_BASE:
+                ((RadioButton) view.findViewById(R.id.sourceFireBase)).setChecked(true);
+                break;
+        }
+    }
+
+    // константа
+    static final int SOURCE_ARRAY = 1;
+    static final int SOURCE_SHARED_PREFERENCES = 2;
+    static final int SOURCE_FIRE_BASE = 3;
+    // своего рода чемоданчик SharedPreferences
+    static String KEY_SP_S2 = "Key_2";
+    static String KEY_SP_S2_CELL_C2 = "s2_cell_2";
+
+    View.OnClickListener listener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.sourceArray:
+                    setCurrentSource(SOURCE_ARRAY);
+                    break;
+                case R.id.sourceSharedPreferences:
+                    setCurrentSource(SOURCE_SHARED_PREFERENCES);
+                    break;
+                case R.id.sourceFireBase:
+                    setCurrentSource(SOURCE_FIRE_BASE);
+                    break;
+
+            }
+        }
+    };
+
+    //запись в SharedPreferences
+    void setCurrentSource(int currentSource) {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(KEY_SP_S2, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_SP_S2_CELL_C2, currentSource);
+        editor.apply();
+    }
+
+    //считываем из SharedPreferences (ячейку KEY_SP_S2_CELL_C2) достаем ячейку из чемоданчика
+    int getCurrentSource() {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(KEY_SP_S2, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_SP_S2_CELL_C2, SOURCE_ARRAY);//SOURCE_ARRAY вернет по деффолту если нету нечего
     }
 
     @Override
@@ -117,6 +179,17 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
 
     void initAdapter() {
         socialNetworkAdapter = new SocialNetworkAdapter(this);
+        switch (getCurrentSource()) {
+            case SOURCE_ARRAY:
+                data = new LocalRepositoryImpl(requireContext().getResources()).init();
+                break;
+            case SOURCE_SHARED_PREFERENCES:
+                //data = new LocalSharedPreferences(requireContext().getResources()).init();
+                break;
+            case SOURCE_FIRE_BASE:
+               // data = new FireBaseRepositoryImpl(requireContext().getResources()).init();
+                break;
+        }
         data = new LocalRepositoryImpl(requireContext().getResources()).init();
         socialNetworkAdapter.setData(data); // 4 - передать в адаптер данные
         socialNetworkAdapter.setOnItemClickListener(this);
