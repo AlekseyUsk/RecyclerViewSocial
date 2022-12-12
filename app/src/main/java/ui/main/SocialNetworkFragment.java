@@ -30,6 +30,7 @@ import publisher.Observer;
 import repository.CardData;
 import repository.CardSource;
 import repository.LocalRepositoryImpl;
+import repository.LocalSharedPreferencesRepositoryImpl;
 import ui.MainActivity;
 import ui.editing.CardEditorFragment;
 
@@ -55,10 +56,27 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initAdapter();
+        setUpSource();
         initRecycler(view);
         setHasOptionsMenu(true); // определил меню
         initRadioGroup(view);    // SharedPreferences
+    }
+
+    void setUpSource() {
+        switch (getCurrentSource()) {
+            case SOURCE_ARRAY:
+                data = new LocalRepositoryImpl(requireContext().getResources()).init();
+                initAdapter();
+                break;
+            case SOURCE_SHARED_PREFERENCES:
+                data = new LocalSharedPreferencesRepositoryImpl(requireContext().getSharedPreferences(LocalSharedPreferencesRepositoryImpl.KEY_SP_2, Context.MODE_PRIVATE)).init();
+                initAdapter();
+                break;
+            case SOURCE_FIRE_BASE:
+                // data = new FireBaseRepositoryImpl(requireContext().getResources()).init();
+               // initAdapter();
+                break;
+        }
     }
 
     private void initRadioGroup(View view) {
@@ -77,6 +95,7 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
                 ((RadioButton) view.findViewById(R.id.sourceFireBase)).setChecked(true);
                 break;
         }
+
     }
 
     // константа
@@ -102,6 +121,7 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
                     break;
 
             }
+            setUpSource();
         }
     };
 
@@ -178,19 +198,8 @@ public class SocialNetworkFragment extends Fragment implements OnItemClickListen
     }
 
     void initAdapter() {
+        if (socialNetworkAdapter==null)
         socialNetworkAdapter = new SocialNetworkAdapter(this);
-        switch (getCurrentSource()) {
-            case SOURCE_ARRAY:
-                data = new LocalRepositoryImpl(requireContext().getResources()).init();
-                break;
-            case SOURCE_SHARED_PREFERENCES:
-                //data = new LocalSharedPreferences(requireContext().getResources()).init();
-                break;
-            case SOURCE_FIRE_BASE:
-               // data = new FireBaseRepositoryImpl(requireContext().getResources()).init();
-                break;
-        }
-        data = new LocalRepositoryImpl(requireContext().getResources()).init();
         socialNetworkAdapter.setData(data); // 4 - передать в адаптер данные
         socialNetworkAdapter.setOnItemClickListener(this);
     }
