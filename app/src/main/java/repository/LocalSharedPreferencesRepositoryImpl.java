@@ -54,6 +54,9 @@ public class LocalSharedPreferencesRepositoryImpl implements CardSource {
     @Override
     public void clearCardsData() {
         dataSource.clear(); // у нашего списка вызвал команду clear - очистка
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_CELL_1, new GsonBuilder().create().toJson(dataSource));
+        editor.apply();
     }
 
     @Override
@@ -67,11 +70,18 @@ public class LocalSharedPreferencesRepositoryImpl implements CardSource {
     @Override
     public void deleteCardData(int position) {
         dataSource.remove(position); // удалил по позиции
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_CELL_1, new GsonBuilder().create().toJson(dataSource));
+        editor.apply();
     }
+
 
     @Override
     public void updateCardData(int position, CardData newCardData) {
         dataSource.set(position, newCardData); // обновил карточку по позиции
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_CELL_1, new GsonBuilder().create().toJson(dataSource));
+        editor.apply(); // todo - HW необнавляется!!!! доделать
     }
 
 
